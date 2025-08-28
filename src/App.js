@@ -6,7 +6,7 @@ import MobileNavigation from "./component/MobileNavigation";
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setBannerData } from "./store/movieoslice";
+import { setBannerData,setImageURL} from "./store/movieoslice";
 
 
 function App() {
@@ -21,13 +21,24 @@ function App() {
       console.error("Error fetching trending data:", error);
     }
   }
+  const fetchConfiguration=async()=>{
+    try{
+      const response =await axios.get("/configuration");
+      dispatch(setImageURL(response.data.images.secure_base_url+"original"))
+      
+
+    }catch(error){
+
+    }
+  }
   useEffect(()=>{
     fetchTrendingData();
+    fetchConfiguration();
   },[])
   return (
     <main className="pb-14 lg:pb-0">
       <Header />
-      <div className="pt-16">
+      <div className="">
         <Outlet />
       </div>
 
