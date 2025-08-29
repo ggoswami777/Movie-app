@@ -1,50 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react"; // ✅ added useRef
 import { useSelector } from "react-redux";
-import { FaAngleRight } from "react-icons/fa6";
-import { FaAngleLeft } from "react-icons/fa6";
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
+
 const BannerHome = () => {
   const bannerData = useSelector((state) => state.movieData.bannerData);
   const imageURL = useSelector((state) => state.movieData.imageURL);
   const [currentImage, setCurrentImage] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const containerRef = useRef(); 
 
   const handleNext = () => {
     setCurrentImage((prev) => (prev < bannerData.length - 1 ? prev + 1 : 0));
+    containerRef.current.scrollLeft += window.innerWidth;
   };
 
   const handlePrevious = () => {
     setCurrentImage((prev) => (prev > 0 ? prev - 1 : bannerData.length - 1));
+    containerRef.current.scrollLeft -= window.innerWidth; 
   };
 
   useEffect(() => {
-    if (bannerData.length === 0) return;
+    if (bannerData.length === 0 || isHovered) return;
 
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev < bannerData.length - 1 ? prev + 1 : 0));
-    }, 3400);
+      containerRef.current.scrollLeft += window.innerWidth;
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [bannerData.length]);
+  }, [bannerData.length, isHovered]);
 
   return (
-    <section className="w-full h-full">
-      <div className="flex min-h-full max-h-[95vh]  overflow-hidden">
+    <section
+      className="w-full h-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div
+        ref={containerRef}
+        className="flex min-h-full max-h-[95vh] overflow-x-scroll scroll-smooth scrollbar-none snap-x snap-mandatory"
+      >
         {bannerData.map((data, item) => {
           return (
             <div
-              className="min-w-full min-h-[450px] lg:min-h-full overflow-hidden relative group  "
-              style={{
-                transform: `translateX(-${currentImage * 100}%)`,
-                transition: "all 0.5s ease-in-out",
-              }}
+              key={data.id + "bannerHome"}
+              className="min-w-full min-h-[450px] lg:min-h-full overflow-hidden relative group snap-center"
             >
               <div className="w-full h-full">
                 <img
                   src={imageURL + data.backdrop_path}
                   className="h-full w-full object-cover object-center"
+                  alt={data.title || data.name}
                 />
               </div>
-              {/* buttons for previous and next movie */}
-              <div className=" hidden absolute top-0 w-full h-full  items-center justify-between px-4 group-hover:lg:flex">
+
+              {/* buttons */}
+              <div className="hidden absolute top-0 w-full h-full items-center justify-between px-4 group-hover:lg:flex">
                 <button
                   onClick={handlePrevious}
                   className="bg-white p-1 rounded-full text-xl z-10 text-black"
@@ -58,9 +70,13 @@ const BannerHome = () => {
                   <FaAngleRight />
                 </button>
               </div>
+
+              {/* overlay */}
               <div className="absolute top-0 w-full h-full bg-gradient-to-t from-neutral-900 to-transparent"></div>
+
+              {/* text content */}
               <div className="container mx-auto">
-                <div className=" w-full absolute bottom-0 max-w-md  px-3">
+                <div className="w-full absolute bottom-0 max-w-md px-3">
                   <h2 className="font-bold text-2xl lg:text-4xl text-white drop-shadow-2xl">
                     {data.title ||
                       data.name ||
@@ -75,7 +91,7 @@ const BannerHome = () => {
                     <span>|</span>
                     <p>View : {data.popularity.toFixed(0)}M Views</p>
                   </div>
-                  <button className="bg-white px-4 py-2 text-black font-bold rounded mt-4 hover:bg-gradient-to-l from-red-700 to-orange-500 shadown-md transition-all hover:scale-105">
+                  <button className="bg-white px-4 py-2 text-black font-bold rounded mt-4 hover:bg-gradient-to-l from-red-700 to-orange-500 shadow-md transition-all hover:scale-105">
                     Play Now
                   </button>
                 </div>
@@ -89,3 +105,4 @@ const BannerHome = () => {
 };
 
 export default BannerHome;
+ 
