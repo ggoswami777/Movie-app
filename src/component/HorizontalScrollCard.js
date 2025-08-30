@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import Card from "./Card";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
-const HorizontalScrollCard = ({ data = [], heading ,trending}) => {
+const HorizontalScrollCard = ({ data = [], heading ,trending,media_type}) => {
   const containerRef = useRef();
   const handleNext=()=>{
     containerRef.current.scrollLeft += 300;
@@ -18,7 +18,7 @@ const HorizontalScrollCard = ({ data = [], heading ,trending}) => {
       <div className=" relative">
         <div
           ref={containerRef}
-          className="grid grid-cols-[repeat(auto-fit,230px)] grid-flow-col  gap-6 overflow-hidden relative z-10 overflow-x-scroll scroll-smooth transition-all scrollbar-none"
+          className="flex gap-6 overflow-x-scroll scroll-smooth relative z-10 scrollbar-none"
         >
           {data.map((data, index) => {
             return (
@@ -27,6 +27,7 @@ const HorizontalScrollCard = ({ data = [], heading ,trending}) => {
                 data={data}
                 index={index + 1}
                 trending={trending}
+                media_type={media_type}
               />
             );
           })}

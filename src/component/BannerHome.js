@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"; // ✅ added useRef
+import React, { useEffect, useState, useRef } from "react"; 
 import { useSelector } from "react-redux";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 

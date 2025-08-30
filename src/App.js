@@ -7,6 +7,8 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setBannerData,setImageURL} from "./store/movieoslice";
+import ScrollToTop from "./component/scrollTop";
+
 
 
 function App() {
@@ -38,7 +40,8 @@ function App() {
   return (
     <main className="pb-14 lg:pb-0">
       <Header />
-      <div className="">
+      <ScrollToTop />
+      <div className="min-h-[90vh]">
         <Outlet />
       </div>
 
